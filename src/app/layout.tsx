@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Geist } from "next/font/google"
+import { Toaster } from "sonner"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"] })
@@ -25,7 +26,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className={geist.className}>{children}</body>
+      <body className={geist.className}>
+        {children}
+        <Toaster richColors position="top-right" />
+      </body>
     </html>
   )
 }
