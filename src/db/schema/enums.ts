@@ -21,7 +21,7 @@ export const purchaseOrderStatusEnum = pgEnum("purchase_order_status", [
 ])
 
 export const deliveryRouteStatusEnum = pgEnum("delivery_route_status", [
-  "pending", "in_progress", "completed",
+  "pending", "in_progress", "completed", "cancelled",
 ])
 
 export const deliveryStopStatusEnum = pgEnum("delivery_stop_status", [

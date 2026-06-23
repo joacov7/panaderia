@@ -86,7 +86,7 @@ export default async function DeliveryRouteDetailPage({ params }: { params: Prom
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-zinc-800 text-sm">
-                    #{stop.position} · {client?.name ?? "Cliente sin nombre"}
+                    #{stop.stopSequence} · {client?.name ?? "Cliente sin nombre"}
                   </p>
                   {client?.address && (
                     <p className="text-xs text-zinc-400">{client.address}</p>

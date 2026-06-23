@@ -22,7 +22,7 @@ export function RouteStatusActions({ routeId, currentStatus }: { routeId: string
   async function handleAdvance() {
     setLoading(true)
     try {
-      await updateRouteStatus(routeId, next!.value)
+      await updateRouteStatus(routeId, next!.value as "in_progress" | "completed" | "cancelled")
       toast.success("Estado actualizado")
       router.refresh()
     } catch {

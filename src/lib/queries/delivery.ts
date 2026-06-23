@@ -25,7 +25,7 @@ export async function getDeliveryRouteById(id: string, tenantId: string) {
             with: { client: { columns: { name: true, address: true, phone: true } } },
           },
         },
-        orderBy: (s, { asc }) => asc(s.position),
+        orderBy: (s, { asc }) => asc(s.stopSequence),
       },
     },
   })

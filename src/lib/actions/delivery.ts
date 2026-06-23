@@ -3,7 +3,7 @@
 import { db } from "@/db"
 import { deliveryRoutes, deliveryRouteStops, orders } from "@/db/schema"
 import { requireRole } from "@/lib/auth/server"
-import { eq, and } from "drizzle-orm"
+import { eq, and, inArray } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 
@@ -20,12 +20,23 @@ export async function createDeliveryRoute(input: unknown) {
   const tenantId = session.user.tenantId
   const data = createRouteSchema.parse(input)
 
+  const orderRows = await db.query.orders.findMany({
+    where: and(
+      eq(orders.tenantId, tenantId),
+      inArray(orders.id, data.orderIds)
+    ),
+    columns: { id: true, clientId: true },
+  })
+
+  const clientMap = new Map(orderRows.map(o => [o.id, o.clientId]))
+
   const [route] = await db
     .insert(deliveryRoutes)
     .values({
       tenantId,
       date:        data.date,
       assignedTo:  data.assignedTo,
+      createdBy:   session.user.id,
       vehicleInfo: data.vehicleInfo,
       notes:       data.notes,
       status:      "pending",
@@ -35,11 +46,12 @@ export async function createDeliveryRoute(input: unknown) {
   await db.insert(deliveryRouteStops).values(
     data.orderIds.map((orderId, i) => ({
       tenantId,
-      routeId:   route.id,
+      routeId:      route.id,
       orderId,
-      position:  i + 1,
-      status:    "pending" as const,
-      localId:   crypto.randomUUID(),
+      clientId:     clientMap.get(orderId) ?? "",
+      stopSequence: i + 1,
+      status:       "pending" as const,
+      localId:      crypto.randomUUID(),
     }))
   )
 
