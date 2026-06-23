@@ -16,7 +16,7 @@ export default function LoginPage() {
     setLoading(true)
     setError("")
 
-    const { error: authError } = await signIn.email({ email, password })
+    const { error: authError } = await signIn.email({ email, password, callbackURL: "/dashboard" })
 
     if (authError) {
       setError("Email o contraseña incorrectos")
@@ -25,6 +25,7 @@ export default function LoginPage() {
     }
 
     router.push("/dashboard")
+    setLoading(false)
   }
 
   return (
