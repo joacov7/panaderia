@@ -38,5 +38,10 @@ export const purchaseOrdersRelations = relations(purchaseOrders, ({ one, many })
   items:     many(purchaseOrderItems),
 }))
 
+export const purchaseOrderItemsRelations = relations(purchaseOrderItems, ({ one }) => ({
+  purchaseOrder: one(purchaseOrders, { fields: [purchaseOrderItems.purchaseOrderId], references: [purchaseOrders.id] }),
+  rawMaterial:   one(rawMaterials, { fields: [purchaseOrderItems.rawMaterialId], references: [rawMaterials.id] }),
+}))
+
 export type PurchaseOrder = typeof purchaseOrders.$inferSelect
 export type NewPurchaseOrder = typeof purchaseOrders.$inferInsert

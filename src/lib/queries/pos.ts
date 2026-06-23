@@ -35,6 +35,18 @@ export async function getSessionSales(sessionId: string) {
   })
 }
 
+export async function getCashSessions(tenantId: string, limit = 30) {
+  return db.query.cashSessions.findMany({
+    where: eq(cashSessions.tenantId, tenantId),
+    with: {
+      register:  { columns: { name: true } },
+      openedBy:  { columns: { name: true } },
+    },
+    orderBy: desc(cashSessions.openedAt),
+    limit,
+  })
+}
+
 export async function getSessionTotals(sessionId: string) {
   const result = await db
     .select({

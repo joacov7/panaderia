@@ -54,6 +54,17 @@ export const saleItems = pgTable("sale_items", {
   subtotal:  numeric("subtotal", { precision: 12, scale: 2 }).notNull(),
 })
 
+export const cashRegistersRelations = relations(cashRegisters, ({ one }) => ({
+  tenant: one(tenants, { fields: [cashRegisters.tenantId], references: [tenants.id] }),
+}))
+
+export const cashSessionsRelations = relations(cashSessions, ({ one, many }) => ({
+  tenant:   one(tenants, { fields: [cashSessions.tenantId], references: [tenants.id] }),
+  register: one(cashRegisters, { fields: [cashSessions.registerId], references: [cashRegisters.id] }),
+  openedBy: one(users, { fields: [cashSessions.openedBy], references: [users.id] }),
+  sales:    many(sales),
+}))
+
 export const salesRelations = relations(sales, ({ one, many }) => ({
   tenant:  one(tenants, { fields: [sales.tenantId], references: [tenants.id] }),
   session: one(cashSessions, { fields: [sales.sessionId], references: [cashSessions.id] }),
@@ -67,6 +78,7 @@ export const saleItemsRelations = relations(saleItems, ({ one }) => ({
   product: one(products, { fields: [saleItems.productId], references: [products.id] }),
 }))
 
+export type CashRegister = typeof cashRegisters.$inferSelect
 export type CashSession = typeof cashSessions.$inferSelect
 export type Sale = typeof sales.$inferSelect
 export type SaleItem = typeof saleItems.$inferSelect

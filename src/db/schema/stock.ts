@@ -65,6 +65,10 @@ export const productsRelations = relations(products, ({ one, many }) => ({
   unit:     one(unitsOfMeasure, { fields: [products.unitId], references: [unitsOfMeasure.id] }),
 }))
 
+export const stockMovementsRelations = relations(stockMovements, ({ one }) => ({
+  createdBy: one(users, { fields: [stockMovements.createdBy], references: [users.id] }),
+}))
+
 export type RawMaterial = typeof rawMaterials.$inferSelect
 export type Product = typeof products.$inferSelect
 export type StockMovement = typeof stockMovements.$inferSelect

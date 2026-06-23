@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getSessionFromRequest } from "better-auth/next-js"
 import { auth } from "@/lib/auth/config"
 import type { UserRole } from "@/types/roles"
 
