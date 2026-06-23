@@ -111,7 +111,7 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
                     <td className="px-5 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-3">
                         {balance > Number(client.creditLimit) * 0.8 && balance > 0 && (
-                          <AlertCircle className="w-4 h-4 text-amber-500" title="Cerca del límite de crédito" />
+                          <span title="Cerca del límite de crédito"><AlertCircle className="w-4 h-4 text-amber-500" /></span>
                         )}
                         <Link
                           href={`/clients/${client.id}`}

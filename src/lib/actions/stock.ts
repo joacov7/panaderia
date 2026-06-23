@@ -135,6 +135,31 @@ export async function adjustStock(input: unknown) {
   return { newStock }
 }
 
+export async function updateRawMaterial(id: string, input: unknown) {
+  const session = await requireRole(["admin", "owner", "supervisor"])
+  const data = rawMaterialSchema.omit({ stockCurrent: true }).parse(input)
+  await db
+    .update(rawMaterials)
+    .set({ ...data, stockMin: String(data.stockMin), costPerUnit: String(data.costPerUnit) })
+    .where(and(eq(rawMaterials.id, id), eq(rawMaterials.tenantId, session.user.tenantId)))
+  revalidatePath("/stock")
+}
+
+export async function updateProduct(id: string, input: unknown) {
+  const session = await requireRole(["admin", "owner", "supervisor"])
+  const data = productSchema.omit({ stockCurrent: true }).parse(input)
+  await db
+    .update(products)
+    .set({
+      ...data,
+      salePrice:      String(data.salePrice),
+      wholesalePrice: data.wholesalePrice ? String(data.wholesalePrice) : null,
+      stockMin:       String(data.stockMin),
+    })
+    .where(and(eq(products.id, id), eq(products.tenantId, session.user.tenantId)))
+  revalidatePath("/stock")
+}
+
 export async function createCategory(name: string, type: "raw_material" | "finished_product") {
   const session = await requireRole(["admin", "owner", "supervisor"])
   const [cat] = await db
